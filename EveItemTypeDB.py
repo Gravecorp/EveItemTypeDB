@@ -20,7 +20,7 @@ dbdatabase = ''
 
 
 # settings
-output = u"xml"
+output = u"mysql"
 xmlRowFormat = u"<{0} {1}=\"{2}\" {3}=\"{4}\" />"
 xmlRowName = u"item"
 xmlTypeIdName = u"id"
@@ -87,15 +87,22 @@ def generateXmlDoc():
 
 def insertIntoDB(values):
     con = getDatabase()
+    cursor = con.cursor()
     for itemid, itemname in values.iteritems():
+        cursor.execute("INSERT INTO itemdb VALUES (%s, %s)", (itemid, itemname))
         print("itemID: " + itemid + " itemName: " + itemname)
+    con.commit()
 
 def getDatabase():
     ret = None
+    global mysqlConnection
     if(mysqlConnection == None):
         ret = None
         # connect to db here
-
+        mysqlConnection = mdb.connect(dbhost, dbuser, dbpassword, dbdatabase)
+        ret = mysqlConnection
+    else:
+        ret = mysqlConnection
     return ret
 
 def finishProcessing():
@@ -107,6 +114,7 @@ def finishProcessing():
             f.write(prettyxml)
     if(output == 'mysql'):
         # close the connection here
+        getDatabase().close()
         thingie = 0
 
 # startup logic
