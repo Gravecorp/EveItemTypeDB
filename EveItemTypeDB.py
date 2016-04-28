@@ -118,4 +118,4 @@ def finishProcessing():
         thingie = 0
 
 # startup logic
-getPage("https://public-crest.eveonline.com/types/?page=1")
+getPage("https://crest-tq.eveonline.com/types/?page=1")
